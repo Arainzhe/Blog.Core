@@ -62,6 +62,7 @@ namespace Blog.Core.Controllers
         [HttpPost]
         public void Post([FromBody] string value)
         {
+
         }
         /// <summary>
         /// 

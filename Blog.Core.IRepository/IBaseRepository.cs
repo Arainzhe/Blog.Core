@@ -2,7 +2,8 @@
 
 namespace Blog.Core.IRepository
 {
-    public class Class1
+    public class IBaseRepository<TEntity> where TEntity:class
     {
+
     }
 }
