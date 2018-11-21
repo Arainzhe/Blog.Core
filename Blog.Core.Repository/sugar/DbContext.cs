@@ -103,12 +103,57 @@ namespace Blog.Core.Repository.sugar
         /// <summary>
         /// 获取数据库处理对象
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="db"></param>
-        /// <returns></returns>
+        /// <param name="db">db</param>
+        /// <returns>返回值</returns>
         public SimpleClient<T> GetEntityDB<T>(SqlSugarClient db) where T : class, new()
         {
             return new SimpleClient<T>(db);
+        }
+        #endregion
+
+        #region 根据数据库生产实体类
+        /// <summary>
+        /// 根据数据库生产实体类
+        /// </summary>
+        /// <param name="strPath">实体类存放路径</param>
+        public void CreateClassFileByDBTalbe(string strPath)
+        {
+            CreateClassFileByDBTalbe(strPath, "Blog.Core.Entity");
+        }
+        /// <summary>
+        /// 功能描述:根据数据库表生产实体类
+        /// </summary>
+        /// <param name="strPath">实体类存放路径</param>
+        /// <param name="strNameSpace">命名空间</param>
+        private void CreateClassFileByDBTalbe(string strPath, string strNameSpace)
+        {
+            CreateClassFileByDBTalbe(strPath,strNameSpace,null);
+        }
+        /// <summary>
+        /// 功能描述:根据数据库表生产实体类
+        /// </summary>
+        /// <param name="strPath">实体类存放路径</param>
+        /// <param name="strNameSpace">命名空间</param>
+        /// <param name="lstTableNames">生产指定的表</param>
+        private void CreateClassFileByDBTalbe(string strPath, string strNameSpace, string[] lstTableNames)
+        {
+            CreateClassFileByDBTalbe(strPath,strNameSpace,lstTableNames,string.Empty);
+        }
+        /// <summary>
+        /// 功能描述:根据数据库表生产实体类
+        /// </summary>
+        /// <param name="strPath">实体类存放路径</param>
+        /// <param name="strNameSpace">命名空间</param>
+        /// <param name="lstTableNames">生产指定的表</param>
+        /// <param name="strInterface">实现接口</param>
+        private void CreateClassFileByDBTalbe(string strPath, string strNameSpace, string[] lstTableNames, string strInterface,bool blnSerializable=false)
+        {
+            if (lstTableNames != null&&lstTableNames.Length>0)  
+            {
+                _db.DbFirst.Where(lstTableNames).IsCreateDefaultValue().IsCreateDefaultValue().SettingClassDescriptionTemplate(p => p = @"
+                {using}namespace{NameSpace}
+                    {ClassDescription}{SugarTable}"+(blnSerializable? "[Serializable]":"")+@"");
+            }
         }
         #endregion
     }
